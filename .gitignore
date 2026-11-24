@@ -1,0 +1,15 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.DS_Store
+_tmp_*/
+data/raw/phm2010/c*/
+data/raw/cdar_npy/*.npy
+data/raw/**/*.zip
+data/raw/**/*.bz2
+data/external/nasa_mill.zip
+*.pkl
+*.joblib
+.env
+reports/*.tmp

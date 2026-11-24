@@ -1,0 +1,40 @@
+project:
+  tools: ["c1", "c4", "c6"]
+  random_seed: 42
+
+data:
+  bundle_csv: "data/external/phm2010_bundle_high_resolution.csv"
+  wear_dir: "data/raw/phm2010_wear"
+  npy_dir: "data/raw/cdar_npy"
+  nasa_zip: "data/external/nasa_mill.zip"
+
+wear:
+  # PHM documentation: wear in 10^-3 mm (µm when read as flute columns in µm scale)
+  default_threshold_um: 300.0
+  sensitivity_thresholds_um: [150.0, 200.0, 250.0, 300.0]
+  wear_aggregate: "max_flute"  # max across flutes after audit
+
+validation:
+  scheme: "leave_one_tool_out"
+  life_stage_fractions: [0.25, 0.5, 0.75]  # retrospective stratification only
+
+features:
+  sensor_columns:
+    - force_x
+    - force_y
+    - force_z
+    - vibration_x
+    - vibration_y
+    - vibration_z
+    - acoustic_emission_rms
+
+models:
+  run_baselines: true
+  run_ml: true
+  quantile_alphas: [0.1, 0.5, 0.9]
+
+paths:
+  results_dir: "results"
+  figures_dir: "results/figures"
+  tables_dir: "results/tables"
+  metrics_dir: "results/metrics"

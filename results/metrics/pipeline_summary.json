@@ -1,0 +1,7 @@
+{
+  "n_tools": 3,
+  "identical_max_cuts_across_tools": false,
+  "default_threshold_um": 300.0,
+  "any_threshold_crossing_300um": false,
+  "metrics_path": "D:\\AI\\cnc-tool-remaining-useful-life-prediction\\results\\tables\\model_metrics.csv"
+}
