@@ -9,7 +9,13 @@ data/raw/cdar_npy/*.npy
 data/raw/**/*.zip
 data/raw/**/*.bz2
 data/external/nasa_mill.zip
+data/external/*.csv
 *.pkl
 *.joblib
 .env
 reports/*.tmp
+# Generated outputs (reproduce via scripts/run_all.py)
+results/
+reports/*.pdf
+reports/*.docx
+!reports/REPRODUCTION.md

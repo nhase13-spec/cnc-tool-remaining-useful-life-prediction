@@ -31,17 +31,16 @@ Place official PHM CSV folders under `data/raw/phm2010/{c1,c4,c6}/` when you obt
 - Statistical feature ideas adapted from `D:\AI\_vibracnc` (separate Sandvik / anomaly stack — not a dependency).
 - Surface-roughness ML tooling lives under `engD_milling_ml_starter` and is intentionally separate.
 
-## Outputs
+## Outputs (local only — not committed)
+
+Run `python scripts/run_all.py` then, optionally, portfolio builders under `scripts/`.
 
 | Path | Content |
 |------|---------|
-| `research_evidence_audit.md` | Target feasibility, censoring, NASA zip status |
-| `results/figures/` | Wear trajectories, model comparison, workflow |
-| `results/tables/` | LOTO metrics, robustness, predictions |
-| `reports/GKN_*.docx` | Research report & portfolio drafts (+ PDF if Word COM available) |
-| `reports/Nikhil_Hase_Sheffield_EngD_GKN_Tool_Life_RUL_Research_Portfolio.{docx,pdf}` | Sandvik-style 5–7 page evidence portfolio (`python scripts/build_nikhil_gkn_rul_portfolio.py`) |
-| `reports/EngD_Tool_Life_RUL_Research_Portfolio_Final.{docx,pdf}` | **Machining ML Final-style** portfolio (`python scripts/build_engd_rul_research_portfolio_final.py`) — copied to Downloads when built |
-| `dashboard/app.py` | Streamlit research demonstrator |
+| `research_evidence_audit.md` | Committed audit template; refreshed by `cnc-rul audit` |
+| `results/` | Figures and metrics (gitignored) |
+| `reports/` | DOCX/PDF reports (gitignored); see `reports/REPRODUCTION.md` |
+| `dashboard/app.py` | Streamlit demonstrator (needs `results/` from a pipeline run) |
 
 ## Tests
 

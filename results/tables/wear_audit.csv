@@ -1,4 +1,0 @@
-tool,n_cuts,max_wear_um,threshold_um,crossed,crossing_cut,right_censored,wear_source
-c1,255,172.68683719999999,300.0,False,,True,official_flute
-c4,315,210.9193705,300.0,False,,True,official_flute
-c6,315,234.7159485,300.0,False,,True,official_flute
