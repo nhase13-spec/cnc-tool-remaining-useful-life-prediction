@@ -73,6 +73,12 @@ def build_main_report() -> Path:
             "Motivates data-driven tool-life and risk-aware replacement research for aerospace machining productivity "
             "without claiming sponsor validation on this public stainless-steel benchmark."
         )),
+        ("Reproduction and public repository", (
+            "Version-controlled source: https://github.com/nhase13-spec/cnc-tool-remaining-useful-life-prediction "
+            "(branch main; pipeline code, tests, wear labels committed; generated results and large data gitignored). "
+            "Clone, install requirements.txt, run scripts/fetch_phm_bundle.py then scripts/run_all.py per "
+            "reports/REPRODUCTION.md."
+        )),
     ]
     for title, body in sections:
         _add_heading(doc, title, 2)
@@ -96,7 +102,10 @@ def build_portfolio() -> Path:
     )
     for heading, text in [
         ("Background", "[Mechanical Engineering qualification — verified details]"),
-        ("Machining ML preparation", "PHM2010 RUL experiments in repository cnc-tool-remaining-useful-life-prediction."),
+        (
+            "Machining ML preparation",
+            "PHM2010 RUL experiments: https://github.com/nhase13-spec/cnc-tool-remaining-useful-life-prediction",
+        ),
         ("Research readiness", "Evidence audit complete; external PHM CSV download recommended for doctoral scale-up."),
     ]:
         _add_heading(doc, heading, 2)

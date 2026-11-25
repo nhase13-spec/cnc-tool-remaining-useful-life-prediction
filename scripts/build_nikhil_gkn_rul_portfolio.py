@@ -203,8 +203,8 @@ def build() -> None:
         "Streamlit demonstrator. This is preparation work, not GKN production software.",
         links=[
             (
-                "cnc-tool-remaining-useful-life-prediction",
-                "file:///D:/AI/cnc-tool-remaining-useful-life-prediction",
+                "github.com/nhase13-spec/cnc-tool-remaining-useful-life-prediction",
+                "https://github.com/nhase13-spec/cnc-tool-remaining-useful-life-prediction",
             )
         ],
     )
@@ -393,7 +393,7 @@ def build() -> None:
     d.para(
         "Supporting material: engineering portfolio https://nhase13.wixsite.com/portfolio. "
         "Supporting evidence on request: SIBM workbooks, FDM materials, academic transcripts, "
-        "RUL repository results and audit files.",
+        "RUL code and audit on GitHub (nhase13-spec/cnc-tool-remaining-useful-life-prediction).",
         size=10,
         links=[("https://nhase13.wixsite.com/portfolio", "https://nhase13.wixsite.com/portfolio")],
     )

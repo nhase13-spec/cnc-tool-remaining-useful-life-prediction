@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import subprocess
 import zipfile
 from pathlib import Path
 
@@ -9,6 +10,31 @@ import pandas as pd
 from cnc_rul.config import ProjectConfig
 from cnc_rul.phm_data import load_bundle, segment_bundle_by_wear_step
 from cnc_rul.wear import audit_wear_table, build_c1_wear_from_bundle, load_tool_wear
+
+
+def _git_snapshot(root: Path) -> dict[str, str]:
+    if not (root / ".git").exists():
+        return {"present": False}
+    try:
+
+        def g(*args: str) -> str:
+            return subprocess.check_output(
+                ["git", "-C", str(root), *args],
+                text=True,
+                stderr=subprocess.DEVNULL,
+            ).strip()
+
+        return {
+            "present": True,
+            "url": "https://github.com/nhase13-spec/cnc-tool-remaining-useful-life-prediction",
+            "branch": g("branch", "--show-current"),
+            "commit_short": g("rev-parse", "--short", "HEAD"),
+            "commit_subject": g("log", "-1", "--format=%s"),
+            "commit_date": g("log", "-1", "--format=%ci"),
+            "tracked_files": str(len(g("ls-files").splitlines())),
+        }
+    except Exception:
+        return {"present": True, "url": "https://github.com/nhase13-spec/cnc-tool-remaining-useful-life-prediction"}
 
 
 def _nasa_status(path: Path) -> dict:
@@ -49,7 +75,9 @@ def run_audit(cfg: ProjectConfig) -> Path:
             wear_audits.append(audit_wear_table(w, tool, th, "audit").__dict__)
 
     nasa = _nasa_status(cfg.resolve(Path("data/external/nasa_mill.zip")))
+    git_info = _git_snapshot(cfg.root)
     report = {
+        "git_repository": git_info,
         "phm_tools": list(cfg.tools),
         "wear_threshold_default_um": cfg.default_threshold_um,
         "nasa_milling": nasa,
@@ -80,11 +108,18 @@ def run_audit(cfg: ProjectConfig) -> Path:
         "",
         f"```json\n{json.dumps(nasa, indent=2)}\n```",
         "",
+        "## Public Git repository",
+        "",
+        f"```json\n{json.dumps(git_info, indent=2)}\n```",
+        "",
         "## Integrity notes",
         "",
     ]
     for note in report["notes"]:
         lines.append(f"- {note}")
+    lines.append(
+        "- Generated results/ and report binaries are gitignored; reproduce with scripts/run_all.py."
+    )
     audit_path.write_text("\n".join(lines), encoding="utf-8")
 
     with (cfg.resolve(cfg.metrics_dir) / "audit_summary.json").open("w", encoding="utf-8") as fh:

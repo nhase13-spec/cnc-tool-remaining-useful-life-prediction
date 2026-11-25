@@ -17,6 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT_DOCX = ROOT / "reports" / "EngD_Tool_Life_RUL_Research_Portfolio_Final.docx"
 OUT_PDF = ROOT / "reports" / "EngD_Tool_Life_RUL_Research_Portfolio_Final.pdf"
 DL = Path(r"C:\Users\hasen\Downloads")
+GITHUB_URL = "https://github.com/nhase13-spec/cnc-tool-remaining-useful-life-prediction"
 
 _PB = Path(
     r"D:\AI\Sensor-Based Tool Wear Prediction and Machining Quality Monitoring"
@@ -56,6 +57,37 @@ class Doc(pb.Doc):
         self.doc.Close(False)
         self.word.Quit()
         return pages
+
+
+def _git_evidence() -> dict[str, str]:
+    import subprocess
+
+    def run(*args: str) -> str:
+        try:
+            return subprocess.check_output(
+                ["git", "-C", str(ROOT), *args],
+                text=True,
+                stderr=subprocess.DEVNULL,
+            ).strip()
+        except Exception:
+            return ""
+
+    short = run("rev-parse", "--short", "HEAD")
+    full = run("rev-parse", "HEAD")
+    subject = run("log", "-1", "--format=%s")
+    date = run("log", "-1", "--format=%ci")
+    branch = run("branch", "--show-current") or "main"
+    n_files = run("ls-files") 
+    file_count = str(len(n_files.splitlines())) if n_files else "—"
+    return {
+        "url": GITHUB_URL,
+        "branch": branch,
+        "short": short or "—",
+        "full": full or "—",
+        "subject": subject or "—",
+        "date": date or "—",
+        "tracked_files": file_count,
+    }
 
 
 def _metrics():
@@ -115,19 +147,16 @@ def build() -> None:
         lead="Author background (self-reported).",
         size=10,
     )
+    git = _git_evidence()
     d.para(
-        "Repository cnc-tool-remaining-useful-life-prediction (PHM2010 cutters c1, c4, c6). "
+        "Public GitHub repository for this RUL study (PHM2010 cutters c1, c4, c6). "
         "Related preparatory work: surface-roughness-machine-learning-model and "
-        "cnc_sensor_quality_monitoring (separate portfolios). Results verified from saved metric "
-        "files and test runs in November 2026.",
-        lead="Source repositories.",
+        "cnc_sensor_quality_monitoring (separate portfolios). Pipeline metrics in this "
+        "document were verified from a local run; large artefacts and generated results "
+        "are not stored in git.",
+        lead="Source repository.",
         size=10,
-        links=[
-            (
-                "cnc-tool-remaining-useful-life-prediction",
-                "file:///D:/AI/cnc-tool-remaining-useful-life-prediction",
-            ),
-        ],
+        links=[("nhase13-spec/cnc-tool-remaining-useful-life-prediction", GITHUB_URL)],
     )
 
     plain = [
@@ -458,10 +487,45 @@ def build() -> None:
     )
 
     d.h1("7  Verification Status and References")
+    d.h2("7.1  Automated tests and audit artefacts")
     d.para("Verification:", lead="")
-    d.bullet("pytest: leakage, censoring, temporal ordering tests passed in repo tests/.")
+    d.bullet("pytest: leakage, censoring, temporal ordering tests in tests/.")
     d.bullet("research_evidence_audit.md generated from audit CLI.")
-    d.bullet("Figures reproduced from results/figures/ pipeline run.")
+    d.bullet("Figures in this document from a local results/figures/ pipeline run (not in git).")
+
+    d.h2("7.2  Public Git repository evidence")
+    d.table(
+        "Version-controlled research codebase (verified at document build time)",
+        ["Item", "Value"],
+        [
+            ["Repository URL", GITHUB_URL],
+            ["Default branch", git["branch"]],
+            ["Latest commit (short)", git["short"]],
+            ["Commit subject", git["subject"]],
+            ["Commit timestamp (author)", git["date"]],
+            ["Tracked paths (git ls-files)", git["tracked_files"]],
+        ],
+        [5.5, 11.5],
+        [0, 0],
+        note=(
+            "Git tracks source code, tests, configuration and small wear-label CSVs. "
+            "results/, report PDF/DOCX outputs and the 12 MB UniWear bundle CSV are gitignored; "
+            "reproduce via scripts/fetch_phm_bundle.py and scripts/run_all.py (see reports/REPRODUCTION.md)."
+        ),
+    )
+    d.table(
+        "Representative tracked components",
+        ["Area", "Purpose"],
+        [
+            ["src/cnc_rul/", "Audit, features, baselines, LOTO pipeline, CLI"],
+            ["tests/", "Leakage and target-construction checks"],
+            ["data/raw/phm2010_wear/", "Per-flute / bundle-derived wear tables"],
+            ["scripts/", "run_all, portfolio builders, fetch_phm_bundle"],
+            ["dashboard/", "Research-only Streamlit demonstrator"],
+        ],
+        [4.5, 12.5],
+        [0, 0],
+    )
     refs = [
         "PHM Society. (2010). 2010 PHM Society Conference Data Challenge. "
         "https://phmsociety.org/phm_competition/2010-phm-society-conference-data-challenge/",
